@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  php:
+    image: dev:latest
+    ports:
+    - '8090:80'
+    extra_hosts:
+      - "host.internal.docker:host-gateway"
+    volumes:
+    - ./app:/app
+    - ./docker/apache/conf/sites-available/000-default.conf:/etc/apache2/sites-available/000-default.conf
+    - ./docker/php/conf/php.ini:/usr/local/etc/php/php.ini
+    - ./docker/php/conf/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    - ./docker/apache/conf/mods-enabled/rewrite.load:/etc/apache2/mods-enabled/rewrite.load
+    - ./docker/apache/conf/apache2.conf:/etc/apache2/apache2.conf
+
+  database:
+    image: mariadb
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: main
+      MYSQL_DATABASE: main
+      MYSQL_USER: main
+      MYSQL_PASSWORD: main
+    volumes:
+      - ./databases/mariadb:/var/lib/mysql
+
